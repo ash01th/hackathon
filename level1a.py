@@ -75,14 +75,13 @@ for i in tour:
         capacity+=orders[i]
         curslot.append(i-1)
 slots.append(curslot)
+for i in range(len(slots)):
+    slots[i]=[0]+slots[i]+[0]
 out={}
 for i in range(len(slots)):
-    out["path"+str(i+1)]=slots[i]
-def out_function(dict1):
-    output={"v0":dict1}
-    json_output=json.dumps(output)
-    with open('level1a_output.json', 'w') as json_file:
-        json.dump(output, json_file,)
-out_function(out)
- 
- 
+    for j in range(len(slots[i])):
+        if slots[i][j]==0:
+            slots[i][j]="r0"
+        else:
+            slots[i][j]="n"+str(slots[i][j])
+
