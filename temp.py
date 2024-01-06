@@ -107,7 +107,7 @@ def tsp(dist):
     optimal_path = path[::-1]  # reverse path list
 
     return optimal_path_length, optimal_path
-
+#.
 
 def main():
     length_of_optimal_path, optimal_path = tsp(dist_mat)
