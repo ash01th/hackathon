@@ -69,11 +69,11 @@ print(tour)
 for i in tour:
     if orders[i]+capacity>600:
         slots.append(curslot)
-        curslot=[i]
+        curslot=[i-1]
         capacity=orders[i]
     else:
         capacity+=orders[i]
-        curslot.append(i)
+        curslot.append(i-1)
 slots.append(curslot)
 out={}
 for i in range(len(slots)):
