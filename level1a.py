@@ -1,5 +1,6 @@
+import numpy as np
 import json
-file_path = 'level1a.json'
+file_path = 'level0.json'
 with open(file_path, 'r') as json_file:
     data = json.load(json_file)
 dist_mat=[]
@@ -27,13 +28,61 @@ dist_mat.append(data["neighbourhoods"]["n19"]["distances"])
 dist_mat[0]=[0]+dist_mat[0]
 for i in range(1,len(dist_mat)):
     add=[dist_mat[0][i]]
-    dist_mat[i]=add+dist_mat[i]
-orders={0:0,1:70,2:70,3:90,4:50,5:70,6:90,7:110,8:70,9:110,10:70,11:70,12:110,13:110,14:90,15:50,16:90,17:110,18:90,19:70,20:110}
-n_dist={}
-for i in range(1,len(dist_mat[0])):
-    n_dist[i]=dist_mat[0][i]
-slots=[]
+    dist_mat[i]=add+dist_mat[i]    
+def tsp_greedy(distances):
+    num_cities = len(distances)
+    
+    # Start from the first city
+    current_city = 0
+    tour = [current_city]
+    
+    # Keep track of visited cities
+    visited_cities = set([current_city])
+    
+    while len(visited_cities) < num_cities:
+        # Find the nearest unvisited city
+        next_city = min(
+            range(num_cities),
+            key=lambda city: distances[current_city][city] if city not in visited_cities else np.inf
+        )
+        
+        # Move to the next city
+        tour.append(next_city)
+        visited_cities.add(next_city)
+        current_city = next_city
+
+    # Return to the starting city to complete the tour
+    tour.append(tour[0])
+    
+    return tour
+
+# Example usage:
+# Replace the 'distances' matrix with the actual distances between cities
+distances=np.array(dist_mat)
+tour = tsp_greedy(distances)
+tour=[x for x in tour if x!=0]
 capacity=0
-n_dist=dict(sorted(n_dist.items(), key=lambda item: item[1]))
-print(n_dist)
+slots=[]
+curslot=[]
+orders={0:0,1:70,2:70,3:90,4:50,5:70,6:90,7:110,8:70,9:110,10:70,11:70,12:110,13:110,14:90,15:50,16:90,17:110,18:90,19:70,20:110}
+print(tour)
+for i in tour:
+    if orders[i]+capacity>600:
+        slots.append(curslot)
+        curslot=[i]
+        capacity=orders[i]
+    else:
+        capacity+=orders[i]
+        curslot.append(i)
+slots.append(curslot)
+out={}
+for i in range(len(slots)):
+    out["path"+str(i+1)]=slots[i]
+def out_function(dict1):
+    output={"v0":dict1}
+    json_output=json.dumps(output)
+    with open('level1a_output.json', 'w') as json_file:
+        json.dump(output, json_file,)
+out_function(out)
+ 
  
